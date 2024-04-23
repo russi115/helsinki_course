@@ -41,6 +41,7 @@ const App = () => {
   )
 }
 
-// it's not the prettiest solution but it works
-
+/* make sense say that exercise is already done(?)
+   StatisticLine is basically the Display component
+*/
 export default App

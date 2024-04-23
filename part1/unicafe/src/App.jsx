@@ -1,7 +1,7 @@
 import { useState } from 'react'
 
 import Button from './components/Button'
-import Display from './components/Display'
+import Statistics from './components/Statistics'
 
 const App = () => {
   // guarda los clics de cada botón en su propio estado
@@ -36,16 +36,11 @@ const App = () => {
       <Button text={"neutral"} handle={neutralOnclick} />
       <Button text={"bad"} handle={badOnclick}/>
 
-      <h1>Statistics</h1>
-      <Display text={"good"} value={good}/>
-      <Display text={"neutral"} value={neutral}/>
-      <Display text={"bad"} value={bad}/>
-
-      <Display text={"all"} value={all}/>
-      <Display text={"average"} value={average/all}/>
-      <Display text={"positive"} value={(good/all)*100}/>
+      <Statistics good={good} neutral={neutral} bad={bad} all={all} average={average} />
     </div>
   )
 }
+
+// it's not the prettiest solution but it works
 
 export default App

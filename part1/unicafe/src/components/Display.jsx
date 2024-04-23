@@ -1,7 +1,7 @@
 function Display({text, value}){
     return(
         <>
-        <p>{text}{value}</p>
+        <p>{text} {value}</p>
         </>
     )
 }

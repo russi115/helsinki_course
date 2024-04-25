@@ -17,7 +17,7 @@ function Statistics({good, neutral, bad, all, average}){
 
         <Display text={"all"} value={all}/>
         <Display text={"average"} value={average/all}/>
-        <Display text={"positive"} value={(good/all)*100}/>
+        <Display text={"positive"} value={(good/all)*100} porcent={true}/>
         </>
     )
 }

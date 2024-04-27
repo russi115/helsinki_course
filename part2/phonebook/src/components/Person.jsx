@@ -1,6 +1,6 @@
-function Person(props) {
+function Person({name, number}) {
     return ( 
-        <p>{props.name}</p>
+        <p>{name} {number}</p>
      );
 }
 

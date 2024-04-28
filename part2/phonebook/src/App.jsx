@@ -1,15 +1,17 @@
-import { useState } from "react";
-import axios from 'axios'
-
+import { useState, useEffect } from "react";
+import personService from './services/persons'
 import Filter from "./components/Filter";
-import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
+import PersonForm from "./components/PersonForm";
 
 const App = () => {
 
-  axios
-  .get('http://localhost:3001/persons')
-  .then(response => setPersons(response.data))
+  const hook = () => {
+    personService
+    .getAll()
+    .then(reponse => setPersons(reponse))
+  }
+  useEffect(hook, [])
 
   const [persons, setPersons] = useState([]);
 
@@ -28,9 +30,14 @@ const App = () => {
     if (persons.filter((elem) => elem.name == nameObject.name).length != 0) {
       return alert(`${newName} is already exist!`);
     }
-    setPersons(persons.concat(nameObject));
-    setNewName("");
-    setNewNumber("");
+    personService
+      .create(nameObject)
+      .then(response => {
+        setPersons(persons.concat(response))
+        setNewName("");
+        setNewNumber("");
+      })
+    
   };
 
   const handleNewName = (event) => {

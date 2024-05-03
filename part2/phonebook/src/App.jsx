@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import personService from './services/persons'
-import Filter from "./components/Filter";
 import Persons from "./components/Persons";
 import PersonForm from "./components/PersonForm";
+
+import Input from "./components/form/Input";
 
 const App = () => {
 
@@ -19,12 +20,12 @@ const App = () => {
   const [newName, setNewName] = useState("Enter a name...");
   const [newNumber, setNewNumber] = useState("Enter a phonenumber...");
 
-  const hanldeSubmit = (event) => {
+  const handleSubmit = (event) => {
     event.preventDefault();
     const nameObject = {
+      id: String(persons.length),
       name: newName,
-      number: newNumber,
-      id: persons.length + 1,
+      number: newNumber
     };
 
     if (persons.filter((elem) => elem.name == nameObject.name).length != 0) {
@@ -32,13 +33,22 @@ const App = () => {
     }
     personService
       .create(nameObject)
-      .then(response => {
+      .then((response) => {
         setPersons(persons.concat(response))
         setNewName("");
         setNewNumber("");
       })
-    
   };
+
+  const handleDelete = id => {  
+    if ( window.confirm(`Delete ${persons.filter((e) => e.id == id)[0].name}?`) ){
+      personService
+      .remove(id)
+      .then((response) => {
+        setPersons(persons.filter(elem => elem.id !== response.id ))
+      })
+    }
+  }
 
   const handleNewName = (event) => {
     setNewName(event.target.value);
@@ -55,7 +65,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Filter
+      <Input
         text={"filter shown with"}
         value={filter}
         handle={handleFilter}
@@ -63,9 +73,9 @@ const App = () => {
       <PersonForm
         texts={["name", "number", "add"]}
         values={[newName, newNumber]}
-        handles={[handleNewName, handleNewNumber, hanldeSubmit]}
+        handles={[handleNewName, handleNewNumber, handleSubmit]}
       />
-      <Persons persons={persons} filter={filter} />
+      <Persons persons={persons} filter={filter} handle={handleDelete}/>
     </div>
   );
 };

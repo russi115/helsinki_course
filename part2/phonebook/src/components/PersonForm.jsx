@@ -1,8 +1,7 @@
 import Input from "./form/Input";
 import Button from "./form/Button";
 
-function PersonForm({texts, values, handles}) {
- 
+function PersonForm({ texts, values, handles }) {
   return (
     <form>
       <h2>Add a new!</h2>

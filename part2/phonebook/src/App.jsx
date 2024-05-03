@@ -23,21 +23,36 @@ const App = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
     const nameObject = {
-      id: String(persons.length),
+      id: String(persons.length+1),
       name: newName,
       number: newNumber
     };
 
     if (persons.filter((elem) => elem.name == nameObject.name).length != 0) {
-      return alert(`${newName} is already exist!`);
-    }
-    personService
+      if(window.confirm(`${nameObject.name} is already added to phonebook, replace the old number with a new one?`)){
+        let nameObject = {
+          name: newName,
+          number: newNumber
+        }
+        personService
+        .update(persons.filter((elem) => elem.name == nameObject.name)[0].id, nameObject)
+        .then((response) => {
+          let newArr = [...persons]
+          newArr.filter((elem) => elem.name == response.name)[0].number = response.number
+          setPersons(newArr)
+          setNewName("")
+          setNewNumber("")
+        })
+      }
+    }else{
+      personService
       .create(nameObject)
       .then((response) => {
         setPersons(persons.concat(response))
         setNewName("");
         setNewNumber("");
       })
+    }
   };
 
   const handleDelete = id => {  

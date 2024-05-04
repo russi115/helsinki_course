@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import personService from './services/persons'
 import Persons from "./components/Persons";
 import PersonForm from "./components/PersonForm";
+import Notification from "./components/Notification";
 
 import Input from "./components/form/Input";
 
@@ -15,10 +16,10 @@ const App = () => {
   useEffect(hook, [])
 
   const [persons, setPersons] = useState([]);
-
   const [filter, setFilter] = useState("");
   const [newName, setNewName] = useState("Enter a name...");
   const [newNumber, setNewNumber] = useState("Enter a phonenumber...");
+  const [message, setMessage ] = useState('');
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -42,6 +43,12 @@ const App = () => {
           setPersons(newArr)
           setNewName("")
           setNewNumber("")
+          setMessage(
+            `Person ${response.name} number was updated!`
+          )
+          setTimeout(() => {
+            setMessage(null)
+          }, 3000)
         })
       }
     }else{
@@ -51,6 +58,12 @@ const App = () => {
         setPersons(persons.concat(response))
         setNewName("");
         setNewNumber("");
+        setMessage(
+          `Person ${response.name} was added!`
+        )
+        setTimeout(() => {
+          setMessage(null)
+        }, 3000)
       })
     }
   };
@@ -80,6 +93,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={message}/>
       <Input
         text={"filter shown with"}
         value={filter}

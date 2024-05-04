@@ -20,6 +20,7 @@ const App = () => {
   const [newName, setNewName] = useState("Enter a name...");
   const [newNumber, setNewNumber] = useState("Enter a phonenumber...");
   const [message, setMessage ] = useState('');
+  const [type, setType ] = useState('');
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -43,6 +44,7 @@ const App = () => {
           setPersons(newArr)
           setNewName("")
           setNewNumber("")
+          setType('noti')
           setMessage(
             `Person ${response.name} number was updated!`
           )
@@ -58,6 +60,7 @@ const App = () => {
         setPersons(persons.concat(response))
         setNewName("");
         setNewNumber("");
+        setType('noti')
         setMessage(
           `Person ${response.name} was added!`
         )
@@ -73,6 +76,17 @@ const App = () => {
       personService
       .remove(id)
       .then((response) => {
+        setPersons(persons.filter(elem => elem.id !== response.id ))
+      })
+      .catch(error => {
+        console.log(error);
+        setType('error')
+        setMessage(
+          `This person was already removed from server`
+        )
+        setTimeout(() => {
+          setMessage(null)
+        }, 3000)
         setPersons(persons.filter(elem => elem.id !== response.id ))
       })
     }
@@ -93,7 +107,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={message}/>
+      <Notification message={message} type={type}/>
       <Input
         text={"filter shown with"}
         value={filter}

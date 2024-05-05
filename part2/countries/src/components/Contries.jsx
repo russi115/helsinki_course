@@ -1,5 +1,6 @@
 import Country from "./Country";
-function Contries({ array, showAll = false }) {
+import Button from "./Button";
+function Contries({ array, showAll = false, handle }) {
   if (showAll) {
     return (
       <>
@@ -27,7 +28,13 @@ function Contries({ array, showAll = false }) {
     return (
       <div>
         {array.map((elem, index) => (
-          <Country key={index + 1} country={elem} type={"nameOnly"} />
+        <>
+        <Country key={index + 1} country={elem} type={"nameOnly"} />
+        <Button text={'show'} handle={() => handle(elem)}/>
+        <div id={elem.name.official} className="none">
+            <Country key={index + 1} country={elem}/>
+        </div>
+        </>
         ))}
       </div>
     );

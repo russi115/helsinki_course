@@ -16,13 +16,18 @@ function App() {
     setFilter(event.target.value);
   };
 
+  const handleOnClick = (event) => { 
+    const info = document.getElementById(event.name.official)
+    info.className == 'none'?info.className='show':info.className='none'
+  }
+
   if(countries.length != 0){
     if (filter != "") {
       return (
         <>
           <h1>Countries</h1>
           <Filter text={"find countries"} value={filter} handle={handleFilter} />
-          <Contries array={countries.filter((elem) =>elem.name.official.toLowerCase().includes(filter.toLowerCase()))} />
+          <Contries array={countries.filter((elem) =>elem.name.official.toLowerCase().includes(filter.toLowerCase()))}  handle={handleOnClick}/>
         </>
       );
     } else {
@@ -30,7 +35,7 @@ function App() {
         <>
           <h1>Countries</h1>
           <Filter text={"find countries"} value={filter} handle={handleFilter} />
-          <Contries array={countries} showAll={true} />
+          <Contries array={countries} showAll={true} handle={handleOnClick} />
         </>
       );
     }

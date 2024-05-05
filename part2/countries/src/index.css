@@ -2,7 +2,7 @@
 .loader {
     height: 60px;
     aspect-ratio: 1;
-    --c:no-repeat linear-gradient(#ffffff 0 0);
+    --c:no-repeat linear-gradient(#e69090 0 0);
     background: var(--c), var(--c), var(--c), var(--c);
     background-size: 33.4% 33.4%;
     animation: l2 2s infinite linear;
@@ -30,4 +30,14 @@
   body{
     background-color: #000000;
     color: white;
+  }
+
+  .error {
+    color: red;
+    background: lightgrey;
+    font-size: 20px;
+    border-style: solid;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
   }

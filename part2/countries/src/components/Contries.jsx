@@ -1,5 +1,6 @@
 import Country from "./Country";
 import Button from "./Button";
+
 function Contries({ array, showAll = false, handle }) {
   if (showAll) {
     return (
@@ -20,7 +21,9 @@ function Contries({ array, showAll = false, handle }) {
     return (
       <div>
         {array.map((elem, index) => (
-          <Country key={index + 1} country={elem} />
+          <>
+          <Country key={index + 1} country={elem} weather={true}/>
+          </>
         ))}
       </div>
     );

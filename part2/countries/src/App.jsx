@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import countriesService from "./services/countries";
 import Filter from "./components/Filter";
 import Contries from "./components/Contries";
-import Country from "./components/Country";
 
 function App() {
   const [countries, setCountries] = useState([]);
@@ -31,9 +30,7 @@ function App() {
         <>
           <h1>Countries</h1>
           <Filter text={"find countries"} value={filter} handle={handleFilter} />
-          {countries.map((e, index) => (
-            <Country key={index+1} country={e} type={'nameOnly'} />
-          ))}
+          <Contries array={countries} showAll={true} />
         </>
       );
     }

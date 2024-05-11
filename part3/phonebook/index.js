@@ -2,7 +2,6 @@ require('dotenv').config()
 const express = require('express')
 const morgan = require('morgan')
 const cors = require('cors')
-const mongoose = require('mongoose')
 
 const Person = require('./models/person')
 
@@ -48,10 +47,6 @@ const errorHandler = (error, request, response, next) => {
 
     next(error)
   }
-
-app.get('/', (request, response) => {
-    response.send('<h1>Phonebook</h1>')
-})
 
 app.get('/info', (request, response, next) => {
     var time = Date(Date.now())

@@ -1,20 +1,42 @@
 const { test, after, beforeEach, describe } = require('node:test')
 const assert = require("node:assert");
 const Blog = require('../models/blog')
+const User = require('../models/user')
 const mongoose = require('mongoose')
 const supertest = require('supertest')
 const helper = require('./test_helper')
+const bcrypt = require('bcrypt')
 
 const app = require('../app')
 const api = supertest(app)
 
 beforeEach(async () => {
+  await User.deleteMany({})
   await Blog.deleteMany({})
 
-  for (let blog of helper.initialBlogs) {
-    let blogObject = new Blog(blog)
+  for (let user of helper.initialUsers) {
+    const passwordHash = await bcrypt.hash(user.password, 10)
+    let userObject = new User({username: user.username, passwordHash})
+    await userObject.save()
+  }
+  for ({title, author, url, likes, user} of helper.initialBlogs) {
+    const users = await helper.usersInDb()
+    const blogObject = new Blog({
+      title: title,
+      author: author,
+      url: url,
+      likes: likes,
+      user: users[0].id
+    })
     await blogObject.save()
   }
+
+  const result = await api
+    .post('/api/login')
+    .send({username: 'root', password: 'admin'})
+    .expect(200)
+  
+  header = { 'Authorization': `Bearer ${result.body.token}`}
 })
 
 describe("API blog", ()=>{
@@ -39,13 +61,14 @@ describe("API blog", ()=>{
         url: "localhost",
         likes: 4,
     }
-    
+
       await api
         .post('/api/blogs')
         .send(newBlog)
         .expect(201)
+        .set(header)
         .expect('Content-Type', /application\/json/)
-    
+
       // const response = await api.get('/api/blogs')
       const blogsAtEnd = await helper.blogsInDb()
       assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length + 1)
@@ -64,6 +87,7 @@ describe("API blog", ()=>{
         .post('/api/blogs')
         .send(newBlog)
         .expect(201)
+        .set(header)
         .expect('Content-Type', /application\/json/)
     
       // const response = await api.get('/api/blogs')
@@ -81,6 +105,7 @@ describe("API blog", ()=>{
         .post('/api/blogs')
         .send(newBlog)
         .expect(400)
+        .set(header)
     
       const blogsAtEnd = await helper.blogsInDb()
   
@@ -95,6 +120,7 @@ describe("API blog", ()=>{
   
       await api
         .delete(`/api/blogs/${blogToDelete.id}`)
+        .set(header)
         .expect(204)
     
       const blogsAtEnd = await helper.blogsInDb()
@@ -142,7 +168,7 @@ describe("API blog", ()=>{
       const blogsAtStart = await helper.blogsInDb()
     
       const blogToView = blogsAtStart[0]
-    
+      blogToView.user = blogToView.user.toString()
     
       const blogResult = await api
         .get(`/api/blogs/${blogToView.id}`)
@@ -152,7 +178,7 @@ describe("API blog", ()=>{
       assert.deepStrictEqual(blogResult.body, blogToView)
     })
   })
-  
+
 })
 
 after(async () => {

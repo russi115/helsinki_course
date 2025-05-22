@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import loginService from '../services/Login'
-import personsService from '../services/persons'
+import blogService from '../services/blogs'
 
 const Login = ({handleUser}) => {
     
@@ -19,11 +19,11 @@ const Login = ({handleUser}) => {
     
         try {
             const user = await loginService.login({ username, password });
-    
+            
             window.localStorage.setItem(
                 'loggedNoteappUser', JSON.stringify(user)      
             ) 
-            personsService.setToken(user.token)
+            blogService.setToken(user.token)
             handleUser(user);
             SetUsername('');
             SetPassword('');
@@ -32,7 +32,7 @@ const Login = ({handleUser}) => {
             // setTimeout(() => {
             //     setErrorMessage("timeout")
             // }, 5000)
-            console.log(exception)
+            (exception)
         }
         console.log('Loggin...', username, password);
     }

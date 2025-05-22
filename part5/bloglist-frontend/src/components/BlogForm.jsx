@@ -36,7 +36,8 @@ const BlogForm = ({blogs, setBlogs, counter}) =>{
         setTittle("");
         setAuthor("");
         setUrl("")
-        setType('noti')
+
+        setType('Noti')
         setMessage(
           `Blog ${response.tittle} was added!`
         )
@@ -44,8 +45,15 @@ const BlogForm = ({blogs, setBlogs, counter}) =>{
           setMessage(null)
         }, 3000)
       })
-    }catch(e){
-        console.log(e)
+    }catch(exception){
+      setType('Error')
+      setMessage(
+        `Failed in login!`
+      )
+      setTimeout(() => {
+        setMessage(null)
+      }, 3000)
+      // console.log(e)
     }
   };
 
@@ -77,15 +85,29 @@ function Button({text, handle}) {
   );
 }
 
-function Notification({message, type}) {
+function Notification({ message, type }) {
+  // Si el mensaje es nulo, no renderizamos nada
   if (message === null) {
     return null;
   }
 
-  return <div className={type}>{message}</div>;
+  // Seleccionamos el estilo basándonos en la prop 'type'
+  // Usamos un switch o un condicional ternario para asignar el objeto de estilo correcto
+  let currentStyle;
+  if (type === 'Error') {
+    currentStyle = Error;
+  } else if (type === 'Noti') { // Usamos 'notification' para el tipo positivo
+    currentStyle = Noti;
+  } else {
+    // Puedes definir un estilo por defecto o lanzar un error si el tipo no es reconocido
+    currentStyle = {}; // Por defecto, sin estilos si el tipo es desconocido
+  }
+
+  // Aplicamos el objeto de estilo directamente al atributo 'style'
+  return <div style={currentStyle}>{message}</div>;
 }
 
-const estiloError = {
+const Error = {
   color: 'red',
   background: 'lightgrey',
   fontSize: '20px', // 'font-size' se convierte a camelCase 'fontSize'
@@ -95,7 +117,7 @@ const estiloError = {
   marginBottom: '10px', // 'margin-bottom' se convierte a camelCase 'marginBottom'
 };
 
-const estiloNoti = {
+const Noti = {
   color: 'green',
   background: 'lightgrey',
   fontSize: '20px',
